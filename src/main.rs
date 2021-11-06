@@ -1,9 +1,20 @@
-use gowiki::page::{Page, load_page};
+use axum::{
+    routing::get,
+    Router,
+};
+use gowiki::routes::view::view;
 
-fn main() {
-   let mut p1 = Page::new("TestPage".to_string(), b"This is a sample Page.".to_vec());
-   p1.save().expect("Can not save a file");
+#[tokio::main]
+async fn main() {
+    if std::env::var_os("RUST_LOG").is_none() {
+        std::env::set_var("RUST_LOG", "info");
+    }
+    tracing_subscriber::fmt::init();
 
-   let page = load_page("TestPage").expect("Can not load a page");
-   println!("{}", String::from_utf8(page.body).expect("Can not convert to String from Vec<u8>"));
+    let app = Router::new().route("/view/:title", get(view));
+
+    axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
 }
