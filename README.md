@@ -1,0 +1,1 @@
+# Gowiki by rust
