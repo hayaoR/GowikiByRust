@@ -6,7 +6,7 @@ use tera::Context;
 use tracing::instrument;
 
 use crate::templates::TEMPLATES;
-use crate::page::{load_page};
+use crate::page::{Page, load_page};
 use crate::handle::handle_error;
 
 
@@ -14,7 +14,7 @@ use crate::handle::handle_error;
 pub async fn edit(Path(title): Path<String>) -> Result<impl IntoResponse, impl IntoResponse> {
     let page = match load_page(&title){
         Ok(page) => page,
-        Err(err) => return Err(handle_error(err)),
+        Err(_) => Page::new(title, vec![]),
     };
 
     tracing::info!("title {}", &page.title);

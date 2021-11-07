@@ -7,14 +7,14 @@ use tracing::instrument;
 
 use crate::templates::TEMPLATES;
 use crate::page::{load_page};
-use crate::handle::handle_error;
+use crate::handle::{handle_error, handle_redirect};
 
 
 #[instrument]
 pub async fn view(Path(title): Path<String>) -> Result<impl IntoResponse, impl IntoResponse> {
     let page = match load_page(&title){
         Ok(page) => page,
-        Err(err) => return Err(handle_error(err)),
+        Err(_) => return Err(handle_redirect(&title)),
     };
 
     tracing::info!("title {}", &page.title);
