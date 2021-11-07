@@ -1,8 +1,9 @@
 use axum::{
-    routing::get,
+    routing::{get, post},
     Router,
 };
-use gowiki::routes::view::view;
+use gowiki::routes::{view::view, edit::edit, save::save};
+
 
 #[tokio::main]
 async fn main() {
@@ -11,7 +12,11 @@ async fn main() {
     }
     tracing_subscriber::fmt::init();
 
-    let app = Router::new().route("/view/:title", get(view));
+    let app = Router::new()
+        .route("/view/:title", get(view))
+        .route("/edit/:title", get(edit))
+        .route("/save/:title", post(save));
+       
 
     axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
         .serve(app.into_make_service())

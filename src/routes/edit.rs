@@ -11,7 +11,7 @@ use crate::handle::handle_error;
 
 
 #[instrument]
-pub async fn view(Path(title): Path<String>) -> Result<impl IntoResponse, impl IntoResponse> {
+pub async fn edit(Path(title): Path<String>) -> Result<impl IntoResponse, impl IntoResponse> {
     let page = match load_page(&title){
         Ok(page) => page,
         Err(err) => return Err(handle_error(err)),
@@ -22,8 +22,7 @@ pub async fn view(Path(title): Path<String>) -> Result<impl IntoResponse, impl I
     let mut context = Context::new();
     context.insert("title", &page.title);
     context.insert("body", &String::from_utf8(page.body).unwrap());
-
-    match TEMPLATES.render("view.html", &context) {
+    match TEMPLATES.render("edit.html", &context) {
         Ok(html) => Ok(Html(html)),
         Err(err) => Err(handle_error(err)),
     }
