@@ -1,18 +1,17 @@
 use axum::{
-    extract::{Path},
-    response::{IntoResponse, Html},
+    extract::Path,
+    response::{Html, IntoResponse},
 };
 use tera::Context;
 use tracing::instrument;
 
-use crate::templates::TEMPLATES;
-use crate::page::{Page, load_page};
 use crate::handle::handle_error;
-
+use crate::page::{load_page, Page};
+use crate::templates::TEMPLATES;
 
 #[instrument]
 pub async fn edit(Path(title): Path<String>) -> Result<impl IntoResponse, impl IntoResponse> {
-    let page = match load_page(&title){
+    let page = match load_page(&title) {
         Ok(page) => page,
         Err(_) => Page::new(title, vec![]),
     };

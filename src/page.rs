@@ -9,10 +9,7 @@ pub struct Page {
 
 impl Page {
     pub fn new(title: String, body: Vec<u8>) -> Self {
-        Self {
-            title,
-            body,
-        }
+        Self { title, body }
     }
 
     pub fn save(&mut self) -> std::io::Result<()> {

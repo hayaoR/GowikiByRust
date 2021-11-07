@@ -3,9 +3,8 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use gowiki::routes::{view::view, edit::edit, save::save};
 use gowiki::check::ValidTitle;
-
+use gowiki::routes::{edit::edit, save::save, view::view};
 
 #[tokio::main]
 async fn main() {
@@ -19,7 +18,6 @@ async fn main() {
         .route("/edit/:title", get(edit))
         .route("/save/:title", post(save))
         .layer(extractor_middleware::<ValidTitle>());
-       
 
     axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
         .serve(app.into_make_service())
